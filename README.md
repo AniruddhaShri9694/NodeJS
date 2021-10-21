@@ -4,11 +4,12 @@
 
 # Project1
 
-This project was generated with Node JS
+This project was generated with Node JS as Backend platform for Hotel Project.
 
 ## Development server
 
-Run `npm start` to start server. local server will run at localhost:3000.
+1. Run `npm i`
+2  Run `npm start` to start server. local server will run at localhost:3000.
 
 ## Further help
 
