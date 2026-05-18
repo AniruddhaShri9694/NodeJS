@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 const app = express();
 //const cors = require('cors'); 
 
@@ -22,8 +23,11 @@ app.use(function(req, res, next)
 
 app.use(express.json());
 
+// Serve static files from the public directory
+app.use(express.static(path.join(__dirname, "public")));
+
 app.get("/", function(req, res) {
-  res.send("Hello World! Header added");
+  res.sendFile(path.join(__dirname, "public/index.html"));
 });
 
 const listinroutes = require("./routes/routing");
