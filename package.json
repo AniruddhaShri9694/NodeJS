@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@vercel/speed-insights": "^2.0.0",
     "cors": "^2.8.5",
     "devenv": "^1.0.1",
     "dotenv": "^8.2.0",
