@@ -11,31 +11,29 @@ const dotenv = require("dotenv");
 router.get("/check",(req,resp)=>{
     try
     {
+        if (!process.env.APIURL) {
+            return resp.status(500).json({error:"APIURL environment variable not set",status:500});
+        }
 
-        // https.get('https://jsonplaceholder.typicode.com/photos', (resp1) => {
         https.get(process.env.APIURL, (resp1) => {
-        let data = '';
+            let data = '';
 
-        resp1.on('data', (chunk) => {
-        data += chunk;
-        });
+            resp1.on('data', (chunk) => {
+                data += chunk;
+            });
 
-        // The whole response has been received. Print out the result.
-        resp1.on('end', () => {
-        // console.log(JSON.parse(data));
-        
-        resp.json({data1: JSON.parse(data),status:100});        
-        });
+            resp1.on('end', () => {
+                resp.json({data1: JSON.parse(data),status:100});        
+            });
 
         }).on("error", (err) => {
-        console.log("Error: " + err.message);
+            console.log("Error: " + err.message);
+            resp.status(500).json({error: err.message, status:500});
         });
-        
-        
     }
     catch(err) 
     {
-        resp.send({error:err,status:500});
+        resp.status(500).send({error:err.message,status:500});
     }
 })
 
@@ -87,7 +85,7 @@ router.post("/login",async (req,resp)=>{
             password:req.body.password
         })
         .then(user=>{
-            if(req.body.email == user.email)
+            if(user && req.body.email == user.email)
             {
                 if(req.body.password == user.password)
                 {
@@ -107,7 +105,7 @@ router.post("/login",async (req,resp)=>{
     }
     catch(err)
     {
-        resp.send({error:err,status:500});
+        resp.send({error:err.message,status:500});
     }
 })
 
@@ -146,8 +144,7 @@ router.post("/addmenu",(req,resp)=>{
     }
     catch(err)
     {
-   
-        ({error:err,status:500});
+        resp.send({error:err.message,status:500});
     }
 })
 

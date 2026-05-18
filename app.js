@@ -5,6 +5,8 @@ const app = express();
 const mongoose  = require("mongoose");
 const dotenv = require("dotenv");
 
+dotenv.config();
+
 app.use(function(req, res, next) 
 {
   res.header("Access-Control-Allow-Origin", "*");
@@ -18,25 +20,32 @@ app.use(function(req, res, next)
   next();
 });
 
-app.listen(2000,()=>
-{
-console.log("Listening to 2000 port");
-});
-
+app.use(express.json());
 
 app.get("/", function(req, res) {
-  res.send("Hello Worlxxxxd! Header added");
+  res.send("Hello World! Header added");
 });
 
 const listinroutes = require("./routes/routing");
 
-dotenv.config();
+// MongoDB Connection
+if (process.env.DB_STR) {
+  mongoose.connect(process.env.DB_STR,
+  { useNewUrlParser: true , useUnifiedTopology: true })
+  .then(() => console.log("DB Connected"))
+  .catch(err => console.error("DB Connection Error:", err));
+} else {
+  console.warn("DB_STR environment variable not set");
+}
 
-mongoose.connect(process.env.DB_STR,
-{ useNewUrlParser: true , useUnifiedTopology: true },()=>{
-console.log("DB Connected");
-}) 
+app.use("/api/listing", listinroutes);
 
-app.use(express.json());
+// Local development server
+const PORT = process.env.PORT || 2000;
+if (process.env.NODE_ENV !== "production") {
+  app.listen(PORT, () => {
+    console.log(`Listening on port ${PORT}`);
+  });
+}
 
-app.use("/api/listing",listinroutes)
+module.exports = app;
